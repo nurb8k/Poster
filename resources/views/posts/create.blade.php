@@ -17,12 +17,18 @@
         </label>
         <input type="text" name="title">
         <br>
+        Category:
+        <select name="category_id">
+            @foreach($categories as $category)
+                <option value="{{$category->id}}">{{$category->name}}</option>
+            @endforeach
+        </select>
         <label>
             <h3>Enter content</h3>
         </label>
-        <textarea name="content" id="" cols="30" rows="10"></textarea>
+        <textarea name="content"  cols="30" rows="10"></textarea>
         <br>
-        <button type="submit">Ok</button>
+        <button type="submit">Publish</button>
     </div>
 
 </form>
