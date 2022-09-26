@@ -35,7 +35,6 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
-                                            //                      sortByDesc -- eskiler tobege.
         $comments = Comment::all()->where('post_id', $post->id)->sortBy('created_at');
 
 
