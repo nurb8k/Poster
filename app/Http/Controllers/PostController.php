@@ -69,34 +69,5 @@ class PostController extends Controller
         return view('posts.index', ['posts' => $posts, 'categories' => Category::all()]);
     }
 
-    public function destroyComment(Comment $comment)
-    {
-        $comment->delete();
-        return redirect()->route('posts.show', $comment->post_id);
-    }
-
-    public function createComment(Request $request)
-    {
-        Comment::create([
-            'content' => $request->input('content'),
-            'post_id' => $request->input('post_id'),
-        ]);
-        return redirect()->route('posts.show', $request->input('post_id'));
-
-    }
-
-    public function editComment(Comment $comment)
-    {
-        return view('posts.editComment', ['comment' => $comment]);
-    }
-
-    public function updateComment(Request $request, Comment $comment)
-    {
-
-        $comment->update([
-            'content' => $request->input('content'),
-        ]);
-        return redirect()->route('posts.show',[$comment->post_id]);
-    }
 
 }

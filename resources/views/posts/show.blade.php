@@ -49,9 +49,12 @@
 
     <p>@if ($comments != null)
         @foreach($comments as $com)
-
             <p>___________</p>
-            <p >  @if($com->created_at == null) no date @else  {{$com->created_at}} @endif </p>
+            <p>  @if($com->created_at == null)
+                    no date
+                @else
+                    {{$com->created_at}}
+                @endif </p>
             <h3>{{$com->content}}</h3>
 
             <a class="btn success" href="{{route('comments.edit',$com)}}">EDIT</a>
