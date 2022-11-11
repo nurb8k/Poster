@@ -3,21 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
+    <title> @yield('title')  </title>
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
+
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
+
     <script type="module" src="http://localhost:3000/@@vite/client"></script>
+
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
-<body>
+<body style="font-family: Arial,sans-serif;">
 <div id="app">
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
@@ -31,8 +31,21 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <!-- Left Side Of Navbar -->
+
                 <ul class="navbar-nav me-auto">
+
+                    @isset($categories)
+                        <li class="nav-item text-uppercase"><a class="nav-link" style="text-decoration: none"
+                                                               href="{{route('posts.index')}}">All posts</a></li>
+                        @foreach($categories as $category)
+                            <li class="nav-item  text-uppercase " style="justify-content: space-between">
+                                <a class="nav-link" style="text-decoration: none"
+                                   href="{{route('posts.category',$category->id)}}">
+                                    {{$category->name}}
+                                </a>
+                            </li>
+                        @endforeach
+                    @endisset
 
                 </ul>
 
@@ -40,15 +53,15 @@
                 <ul class="navbar-nav ms-auto">
                     <!-- Authentication Links -->
                     @guest
-                        @if (Route::has('login'))
+                        @if (Route::has('login.form'))
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                         @endif
 
-                        @if (Route::has('register'))
+                        @if (Route::has('register.form'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                <a class="nav-link" href="{{ route('register.form') }}">{{ __('Register') }}</a>
                             </li>
                         @endif
                     @else
@@ -77,8 +90,35 @@
     </nav>
 
     <main class="py-4">
-        @yield('content')
+
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+                    @yield('content')
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
     </main>
 </div>
+<!-- JavaScript Bundle with Popper -->
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+
+
 </body>
 </html>

@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -13,9 +14,19 @@ class PostController extends Controller
 
     public function index()
     {
+//        $allPosts = Post::with('comments.user')->get();
         $allPosts = Post::all();
         $categories = Category::all();
         return view('posts.index', ['posts' => $allPosts, 'categories' => $categories]);
+    }
+    public function show(Post $post)
+    {
+
+        $post->load('comments.user');
+//        $comments = Comment::all()->where('post_id', $post->id);
+//        $comments = $post->comments;
+
+        return view('posts.show', ['post' => $post]);
     }
 
     public function create()
@@ -25,21 +36,21 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-        Post::create([
-            'title' => $request->title,
-            'content' => $request->input('content'),
-            'category_id' => $request->input('category_id'),
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'category_id' => 'required|numeric|exists:categories,id',
+
         ]);
-        return redirect()->route('posts.index');
+
+        //  Post::create($validated+['user_id'=>Auth::class::user()->id]);
+        Auth::user()->posts()->create($validated);
+
+        return redirect()->route('posts.index')->with('message', 'Post saktaldy');
+
     }
 
-    public function show(Post $post)
-    {
-        $comments = Comment::all()->where('post_id', $post->id)->sortBy('created_at');
 
-
-        return view('posts.show', ['post' => $post, 'comments' => $comments]);
-    }
 
     public function edit(Post $post)
     {
@@ -64,9 +75,10 @@ class PostController extends Controller
 
     public function postsByCategory(Category $category)
     {
-        $posts = $category->posts;
 
+        $posts = $category->posts;
         return view('posts.index', ['posts' => $posts, 'categories' => Category::all()]);
+
     }
 
 

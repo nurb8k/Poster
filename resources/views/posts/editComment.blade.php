@@ -9,6 +9,7 @@
 </head>
 <body>
 <a href="{{ route('posts.index') }}">index page</a>
+{{--<h1>asdasdsad</h1>--}}
 <form action="{{route('comments.update',$comment->id)}}" method="post">
     @csrf
     @method('PUT')
